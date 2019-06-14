@@ -37,9 +37,9 @@ paths:
             type: array
             items:
               properties:
-                fname:
+                first_name:
                   type: string
-                lname:
+                last_name:
                   type: string
                 timestamp:
                   type: string
@@ -58,17 +58,17 @@ paths:
           schema:
             type: object
             properties:
-              fname:
+              first_name:
                 type: string
                 description: First name of person to create
-              lname:
+              last_name:
                 type: string
                 description: Last name of person to create
       responses:
         201:
           description: Successfully created person in list
 
-  /profile/{lname}:
+  /profile/{last_name}:
     get:
       operationId: people.read_one
       tags:
@@ -76,7 +76,7 @@ paths:
       summary: Read one person from the people list
       description: Read one person from the people list
       parameters:
-        - name: lname
+        - name: last_name
           in: path
           description: Last name of the person to get from the list
           type: string
@@ -86,9 +86,9 @@ paths:
           description: Successfully read person from people list operation
           schema:
             properties:
-              fname:
+              first_name:
                 type: string
-              lname:
+              last_name:
                 type: string
               timestamp:
                 type: string
@@ -100,7 +100,7 @@ paths:
       summary: Update a person in the people list
       description: Update a person in the people list
       parameters:
-        - name: lname
+        - name: last_name
           in: path
           description: Last name of the person to update in the list
           type: string
@@ -110,9 +110,9 @@ paths:
           schema:
             type: object
             properties:
-              fname:
+              first_name:
                 type: string
-              lname:
+              last_name:
                 type: string
       responses:
         200:
@@ -125,7 +125,7 @@ paths:
       summary: Delete a person from the people list
       description: Delete a person
       parameters:
-        - name: lname
+        - name: last_name
           in: path
           type: string
           required: True
