@@ -1,110 +1,125 @@
 from datetime import datetime
 from flask import make_response, abort
+from random import randint
+
+RANDOM_RANGE_CAP = 9999  # upper cap for the pseudo-random number generator for id
 
 
-def get_timestamp():
-    return datetime.now().strftime(("%Y-%m-%d %H:%M:%S"))
+def generateId():
+    return (randint(0, RANDOM_RANGE_CAP))
 
 
-# Data to serve with our API
+# Data to serve over API
 PEOPLE = {}
 
 
 def read_all():
     """
-    This function responds to a request for /api/people
+    responds to a request for /api/profile
     with the complete lists of people
     :return:        json string of list of people
     """
-    # Create the list of people from our data
+    # Create the list of people from data
     return [PEOPLE[key] for key in sorted(PEOPLE.keys())]
 
 
-def read_one(last_name):
+def read_one(id):
     """
-    This function responds to a request for /api/people/{last_name}
-    with one matching person from people
-    :param last_name:   last name of person to find
-    :return:        person matching last name
+    responds to a request for /api/profile/{id}
+    with one matching profile from people
+    :param id:   id of profile to find
+    :return:        profile matching username
     """
-    # Does the person exist in people?
-    if last_name in PEOPLE:
-        person = PEOPLE.get(last_name)
+    # Check if profile exists in people
+    if id in PEOPLE:
+        profile = PEOPLE.get(id)
 
-    # otherwise, nope, not found
+    # otherwise, not found
     else:
         abort(
-            404, "Person with last name {last_name} not found".format(last_name=last_name)
+            404, "profile with ID {id} not found".format(
+                id=id)
         )
 
-    return person
+    return profile
 
 
-def create(person):
+def create(profile):
     """
-    This function creates a new person in the people structure
-    based on the passed in person data
-    :param person:  person to create in people structure
-    :return:        201 on success, 406 on person exists
+    creates a new profile in the people structure
+    based on the passed id in profile data
+    :param profile:  profile to create in people structure
+    :return:        201 on success, 406 on profile exists
     """
-    last_name = person.get("last_name", None)
-    first_name = person.get("first_name", None)
+    last_name = profile.get("last_name", None)
+    first_name = profile.get("first_name", None)
+    username = profile.get("username", None)
+    age = profile.get("age", None)
+    id = generateId()
 
-    # Does the person exist already?
-    if last_name not in PEOPLE and last_name is not None:
-        PEOPLE[last_name] = {
-            "last_name": last_name,
-            "first_name": first_name,
-            "timestamp": get_timestamp(),
-        }
-        return make_response(
-            "{last_name} successfully created".format(last_name=last_name), 201
-        )
+    # Check if the id exists already
+    isIdUnique = False
+    while(isIdUnique == False):
+        # if id exists, generate a new Id
+        if id in PEOPLE:
+            id = generateId()
+        else:
+            isIdUnique = True
 
-    # Otherwise, they exist, that's an error
+    PEOPLE[id] = {
+        "last_name": last_name,
+        "first_name": first_name,
+        "username": username,
+        "age": age,
+        "id": id,
+    }
+    return make_response(
+        "{username} successfully created".format(username=username), 201
+    )
+
+
+def update(profile):
+    """
+    updates an existing profile in the people structure
+    :param profile:  profile to update
+    :return:        updated profile structure
+    """
+    id = profile.get("id")
+    # Check if profile exists in people
+    if id in PEOPLE:
+        # Update age and username only
+        PEOPLE[id]["age"] = profile.get("age")
+        PEOPLE[id]["username"] = profile.get("username")
+
+        return PEOPLE[id]
+
+    # otherwise, throw an error
     else:
         abort(
-            406,
-            "Peron with last name {last_name} already exists".format(last_name=last_name),
+            404, "profile with Id {id} not found".format(
+                id=id)
         )
 
 
-def update(last_name, person):
+def delete(id):
     """
-    This function updates an existing person in the people structure
-    :param last_name:   last name of person to update in the people structure
-    :param person:  person to update
-    :return:        updated person structure
-    """
-    # Does the person exist in people?
-    if last_name in PEOPLE:
-        PEOPLE[last_name]["first_name"] = person.get("first_name")
-        PEOPLE[last_name]["timestamp"] = get_timestamp()
-
-        return PEOPLE[last_name]
-
-    # otherwise, nope, that's an error
-    else:
-        abort(
-            404, "Person with last name {last_name} not found".format(last_name=last_name)
-        )
-
-
-def delete(last_name):
-    """
-    This function deletes a person from the people structure
-    :param last_name:   last name of person to delete
+    deletes a profile from the people structure
+    :param id:   id of profile to delete
     :return:        200 on successful delete, 404 if not found
     """
-    # Does the person to delete exist?
-    if last_name in PEOPLE:
-        del PEOPLE[last_name]
+
+    # Check if the profile exists
+    if id in PEOPLE:
+        username = PEOPLE[id]["username"]
+        del PEOPLE[id]
         return make_response(
-            "{last_name} successfully deleted".format(last_name=last_name), 200
+            "{id} with username {username} successfully deleted".format(
+                id=id, username=username), 200
         )
 
-    # Otherwise, nope, person to delete not found
+    # Otherwise, profile to delete not found
     else:
         abort(
-            404, "Person with last name {last_name} not found".format(last_name=last_name)
+            404, "profile with id {id} not found".format(
+                id=id)
         )

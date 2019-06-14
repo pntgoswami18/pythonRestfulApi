@@ -41,94 +41,114 @@ paths:
                   type: string
                 last_name:
                   type: string
-                timestamp:
+                useranme:
                   type: string
+                age:
+                  type: integer
+                id:
+                  type: integer
 
+  /profile/new:
     post:
       operationId: people.create
       tags:
         - people
       summary: Create the Profile entity with the fields described
-      description: Create a new person in the people list
+      description: Create a new profile in the people list
       parameters:
-        - name: person
+        - name: profile
           in: body
-          description: Person to create
+          description: profile to create
           required: True
           schema:
             type: object
             properties:
               first_name:
                 type: string
-                description: First name of person to create
+                description: First name of profile to create
               last_name:
                 type: string
-                description: Last name of person to create
+                description: Last name of profile to create
+              useranme:
+                  type: string
+                  description: Unique username of the profile to create
+              age:
+                type: integer
+                description: Age of the profile to create
+              id:
+                type: integer
+                description: Unique id of the profile to create
       responses:
         201:
-          description: Successfully created person in list
+          description: Successfully created profile in list
 
-  /profile/{last_name}:
+  /profile/{id}:
     get:
       operationId: people.read_one
       tags:
         - people
-      summary: Read one person from the people list
-      description: Read one person from the people list
+      summary: Read one profile from the people list
+      description: Read one profile from the people list
       parameters:
-        - name: last_name
+        - name: id
           in: path
-          description: Last name of the person to get from the list
-          type: string
+          description: id of the profile to get from the list
+          type: integer
           required: True
       responses:
         200:
-          description: Successfully read person from people list operation
+          description: Successfully read profile from people list operation
           schema:
             properties:
               first_name:
                 type: string
               last_name:
                 type: string
-              timestamp:
+              useranme:
                 type: string
+              age:
+                type: integer
+              id:
+                type: integer
 
+  /profile/update:
     put:
       operationId: people.update
       tags:
         - people
-      summary: Update a person in the people list
-      description: Update a person in the people list
+      summary: Update a profile in the people list
+      description: Update a profile in the people list
       parameters:
-        - name: last_name
-          in: path
-          description: Last name of the person to update in the list
-          type: string
-          required: True
-        - name: person
+        - name: profile
           in: body
+          required: True
+          description: profile to update in the list
           schema:
             type: object
             properties:
-              first_name:
+              username:
                 type: string
-              last_name:
-                type: string
+              age:
+                type: integer
+              id:
+                type: integer
       responses:
         200:
-          description: Successfully updated person in people list
-
+          description: Successfully updated profile in people list
+              
+  /profile/remove/{id}:
     delete:
       operationId: people.delete
       tags:
         - people
-      summary: Delete a person from the people list
-      description: Delete a person
+      summary: delete a profile in the people list
+      description: delete a profile in the people list
       parameters:
-        - name: last_name
+        - name: id
           in: path
-          type: string
           required: True
+          description: id of profile to delete from the list
+          type: integer
       responses:
         200:
-          description: Successfully deleted a person from people list
+          description: Successfully deleted profile in people list
