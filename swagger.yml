@@ -12,7 +12,9 @@ basePath: /api
 
 # Paths opened
 paths:
+  
   /profile:
+    # route to get all profiles
     get:
       operationId: people.read_all
       tags:
@@ -48,7 +50,9 @@ paths:
                 id:
                   type: integer
 
+  
   /profile/new:
+    # route to create a new profile
     post:
       operationId: people.create
       tags:
@@ -83,6 +87,7 @@ paths:
           description: Successfully created profile in list
 
   /profile/{id}:
+    # route to get a profile through its id
     get:
       operationId: people.read_one
       tags:
@@ -112,6 +117,7 @@ paths:
                 type: integer
 
   /profile/update:
+    # route to update a profile's username and/or age
     put:
       operationId: people.update
       tags:
@@ -137,6 +143,7 @@ paths:
           description: Successfully updated profile in people list
               
   /profile/remove/{id}:
+    # route to remove a profile
     delete:
       operationId: people.delete
       tags:

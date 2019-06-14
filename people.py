@@ -5,11 +5,11 @@ from random import randint
 RANDOM_RANGE_CAP = 9999  # upper cap for the pseudo-random number generator for id
 
 
-def generateId():
+def generate_id():
     return (randint(0, RANDOM_RANGE_CAP))
 
 
-# Data to serve over API
+# Data store to serve over API
 PEOPLE = {}
 
 
@@ -55,16 +55,16 @@ def create(profile):
     first_name = profile.get("first_name", None)
     username = profile.get("username", None)
     age = profile.get("age", None)
-    id = generateId()
+    id = generate_id()
 
     # Check if the id exists already
-    isIdUnique = False
-    while(isIdUnique == False):
+    is_id_unique = False
+    while(is_id_unique == False):
         # if id exists, generate a new Id
         if id in PEOPLE:
-            id = generateId()
+            id = generate_id()
         else:
-            isIdUnique = True
+            is_id_unique = True
 
     PEOPLE[id] = {
         "last_name": last_name,
